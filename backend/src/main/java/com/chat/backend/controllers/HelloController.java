@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/")
 public class HelloController {
 
-    private String mongoDbUri;
+//    private String mongoDbUri;
     @Autowired
     VideoRepository repository;
     @GetMapping("/hello")
@@ -25,7 +25,7 @@ public class HelloController {
 
     @GetMapping("video-test")
     public List<Video> getAllVideos() {
-        System.out.println(mongoDbUri);
+//        System.out.println(mongoDbUri);
         return repository.findAll();
     }
 }
