@@ -36,6 +36,8 @@ public class YoutubeLinksSave {
     @Autowired
     private VideoChunkRepository videoChunkRepository;
 
+    @Autowired
+    private EmbeddingService embeddingService;
 
     public List<VideoChunk> saveYoutubeLinksToDB(List<String> youtubeLinks) throws Exception {
         youtubeLinks.forEach((link)->{
@@ -61,13 +63,52 @@ public class YoutubeLinksSave {
                             .body(SupadataResponse.class);
             System.out.println(result);
             List<Transcript> transcripts = result.getContent();
-            System.out.println(transcripts);
+
+            int i = 0;
             int chunkIndex = 0;
-            for(Transcript transcript : transcripts) {
-                VideoChunk videoChunk = new VideoChunk(savedVideo, chunkIndex, transcript.getOffset(), transcript.getOffset() + transcript.getDuration(), transcript.getText());
-                chunkIndex++;
+
+            while (i < transcripts.size()) {
+
+                StringBuilder sb = new StringBuilder();
+
+                int startTime = transcripts.get(i).getOffset();
+                int endTime = startTime;
+
+                int j = i;
+
+                while (j < transcripts.size() && j < i + 50) {
+
+                    Transcript transcript = transcripts.get(j);
+
+                    sb.append(transcript.getText()).append(" ");
+
+                    endTime = transcript.getOffset() + transcript.getDuration();
+
+                    j++;
+                }
+
+                String chunkText = sb.toString().trim();
+
+                // Generate embedding for this chunk
+                List<Double> embedding = embeddingService.generateEmbedding(chunkText);
+
+                // Save everything together
+                VideoChunk videoChunk = new VideoChunk(
+                        savedVideo,
+                        chunkIndex,
+                        startTime,
+                        endTime,
+                        chunkText,
+                        embedding
+                );
+
                 videoChunkRepository.save(videoChunk);
-            };
+
+                chunkIndex++;
+                i = j;
+            }
+
+            System.out.println("Saved chunks + embeddings to DB");
         });
         System.out.println("Saved to DB");
         return videoChunkRepository.findAll();

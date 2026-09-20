@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
+import java.util.List;
+
 @Document(collection = "video_chunks")
 @Data
 @NoArgsConstructor
@@ -23,14 +25,14 @@ public class VideoChunk {
     private double startTime;
     private double endTime;
     private String text;
+    private List<Double> embedding;
 
-    public VideoChunk(Video video, int chunkIndex, double startTime, double endTime, String text) {
-        this.video = video;
+    public VideoChunk(Video savedVideo, int chunkIndex, int startTime, int endTime, String chunkText, List<Double> embedding) {
+        video = savedVideo;
         this.chunkIndex = chunkIndex;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.text = text;
+        text = chunkText;
+        this.embedding = embedding;
     }
-    // embedding array here
-
 }
