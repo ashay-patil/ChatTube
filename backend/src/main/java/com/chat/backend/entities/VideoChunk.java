@@ -22,8 +22,8 @@ public class VideoChunk {
     private Video video;
 
     private int chunkIndex;
-    private double startTime;
-    private double endTime;
+    private int startTime;
+    private int endTime;
     private String text;
     private List<Double> embedding;
 
