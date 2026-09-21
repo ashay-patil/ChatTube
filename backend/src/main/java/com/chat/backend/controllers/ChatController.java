@@ -1,6 +1,8 @@
 package com.chat.backend.controllers;
 
+import com.chat.backend.DTO.LLMResponse;
 import com.chat.backend.DTO.VideoChunkSearchResult;
+import com.chat.backend.services.ChatService;
 import com.chat.backend.services.VideoChunkSimilaritySearch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,11 +18,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 public class ChatController {
-    @Autowired
-    private VideoChunkSimilaritySearch videoChunkSimilaritySearch;
 
+    @Autowired
+    ChatService chatService;
     @PostMapping("/ask-question")
-    public List<VideoChunkSearchResult> getResponse(@RequestBody String userQuestion) {
-        return videoChunkSimilaritySearch.search(userQuestion);
+    public LLMResponse getResponse(@RequestBody String userQuestion) throws Exception{
+        return chatService.getResponse(userQuestion);
     }
 }

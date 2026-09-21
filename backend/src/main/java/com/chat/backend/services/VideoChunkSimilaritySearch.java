@@ -16,10 +16,7 @@ public class VideoChunkSimilaritySearch {
     @Autowired
     private EmbeddingService embeddingService;
 
-    public List<VideoChunkSearchResult> search(String question) {
-
-        List<Double> queryEmbedding =
-                embeddingService.generateEmbedding(question);
+    public List<VideoChunkSearchResult> search(List<Double> queryEmbedding) {
 
         Document vectorSearch = new Document(
                 "$vectorSearch",
