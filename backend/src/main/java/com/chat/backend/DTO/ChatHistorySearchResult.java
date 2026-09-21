@@ -4,5 +4,8 @@ import lombok.Data;
 
 @Data
 public class ChatHistorySearchResult {
-    // id , userQuestion, LLMResponse, score
+    private String id;
+    private String userQuestion;
+    private String LLMResponse;
+    private double score;
 }

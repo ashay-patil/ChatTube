@@ -1,11 +1,16 @@
 package com.chat.backend.controllers;
 
+import com.chat.backend.DTO.ChatHistorySearchResult;
 import com.chat.backend.repositories.VideoRepository;
+import com.chat.backend.services.ChatHistorySimilaritySearch;
+import com.chat.backend.services.EmbeddingService;
 import com.chat.backend.services.LLMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/")
@@ -17,6 +22,11 @@ public class TestController {
     @Autowired
     LLMService llmService;
 
+    @Autowired
+    ChatHistorySimilaritySearch chatHistorySimilaritySearch;
+
+    @Autowired
+    EmbeddingService embeddingService;
     @GetMapping("/hello")
     public String sayHello() {
         return "Hello Chat App";
@@ -24,8 +34,13 @@ public class TestController {
 
     @GetMapping("/test-gemini")
     public String testGemini() throws Exception{
-        return llmService.getGeminiResponse("Hello How Are you", "Sample Context");
+        return llmService.getGeminiResponse("Hello How Are you", "Sample VideoContext", "Sample Chat Context");
     }
 
+    @GetMapping("/test-chat-history-retrieval")
+    public List<ChatHistorySearchResult> getRelevantChatHistory() {
+        List<Double> testEmbedding = embeddingService.generateEmbedding("What all questions about brain power did I ask you ? ");
+        return chatHistorySimilaritySearch.search(testEmbedding);
+    }
 
 }

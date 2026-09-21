@@ -19,7 +19,7 @@ public class LLMService {
         this.client = Client.builder().apiKey(apiKey).build();
     }
 
-    public String getGeminiResponse(String userQuestion, String context) throws Exception{
+    public String getGeminiResponse(String userQuestion, String videoTranscriptContext, String chatHistoryContext) throws Exception{
 //        return "{\n" +
 //                "  \"response\": \"Yes, the video transcript mentions that your brain is the most powerful weapon in the world.\",\n" +
 //                "  \"timestamps\": [\n" +
@@ -33,8 +33,10 @@ public class LLMService {
         String promptString = this.loadPromptFromFile("prompt.txt");
         String promptContent = this.putValuesToTemplate(promptString, Map.of(
                 "question", userQuestion,
-                "context", context
+                "videoTranscriptContext", videoTranscriptContext,
+                "chatHistoryContext", chatHistoryContext
         ));
+        System.out.println(promptContent);
         GenerateContentResponse response =
                 client.models.generateContent("gemini-3.5-flash-lite", promptContent, null);
 

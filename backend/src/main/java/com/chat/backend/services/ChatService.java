@@ -1,5 +1,6 @@
 package com.chat.backend.services;
 
+import com.chat.backend.DTO.ChatHistorySearchResult;
 import com.chat.backend.DTO.LLMResponse;
 import com.chat.backend.DTO.VideoChunkSearchResult;
 import com.chat.backend.entities.ChatHistory;
@@ -17,6 +18,9 @@ public class ChatService {
     VideoChunkSimilaritySearch videoChunkSimilaritySearch;
 
     @Autowired
+    ChatHistorySimilaritySearch chatHistorySimilaritySearch;
+
+    @Autowired
     EmbeddingService embeddingService;
 
     @Autowired
@@ -31,14 +35,23 @@ public class ChatService {
     public LLMResponse getResponse(String userQuestion) throws Exception{
         List<Double> userQuestionEmbedding = embeddingService.generateEmbedding(userQuestion);
         List<VideoChunkSearchResult> knowledgeBaseSimilarityResult = videoChunkSimilaritySearch.search(userQuestionEmbedding);
+        List<ChatHistorySearchResult> chatHistorySimilarityResult = chatHistorySimilaritySearch.search(userQuestionEmbedding);
+        System.out.println("videoChunkSimilarityResult="+videoChunkSimilaritySearch);
+        System.out.println("chatHistorySimilarityResult="+chatHistorySimilarityResult);
 
-        StringBuilder promptContext = new StringBuilder("");
+        StringBuilder videoTranscriptPromptContext = new StringBuilder("");
+
         knowledgeBaseSimilarityResult.forEach((videoChunk) -> {
-            promptContext.append(videoChunk.toString() + ", ");
+            videoTranscriptPromptContext.append(videoChunk.toString() + ", ");
         });
-        System.out.println("promptContext="+promptContext);
 
-        String llmResponse = llmService.getGeminiResponse(userQuestion, promptContext.toString());
+        StringBuilder chatHistoryPromptContext = new StringBuilder();
+
+        chatHistorySimilarityResult.forEach((chat) -> {
+            chatHistoryPromptContext.append(chat.toString());
+        });
+
+        String llmResponse = llmService.getGeminiResponse(userQuestion, videoTranscriptPromptContext.toString(), chatHistoryPromptContext.toString());
         LLMResponse llmResponseObject = objectMapper.readValue(llmResponse, LLMResponse.class);
         List<Double> llmResponseEmbedding = embeddingService.generateEmbedding(llmResponse);
         ChatHistory chatHistory = new ChatHistory();
