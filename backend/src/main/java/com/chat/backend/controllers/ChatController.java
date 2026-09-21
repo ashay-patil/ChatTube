@@ -1,18 +1,21 @@
 package com.chat.backend.controllers;
 
 import com.chat.backend.DTO.VideoChunkSearchResult;
-import com.chat.backend.repositories.VideoChunkRepository;
 import com.chat.backend.services.VideoChunkSimilaritySearch;
-import org.apache.catalina.LifecycleState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
-import org.bson.Document;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-public class UserQuestionController {
+public class ChatController {
     @Autowired
     private VideoChunkSimilaritySearch videoChunkSimilaritySearch;
 
