@@ -53,9 +53,9 @@ public class ChatService {
 
         String llmResponse = llmService.getGeminiResponse(userQuestion, videoTranscriptPromptContext.toString(), chatHistoryPromptContext.toString());
         LLMResponse llmResponseObject = objectMapper.readValue(llmResponse, LLMResponse.class);
-        List<Double> llmResponseEmbedding = embeddingService.generateEmbedding(llmResponse);
+        List<Double> llmResponseEmbedding = embeddingService.generateEmbedding(llmResponseObject.getResponse());
         ChatHistory chatHistory = new ChatHistory();
-        chatHistory.setLLMResponse(llmResponse);
+        chatHistory.setLLMResponse(llmResponseObject.getResponse());
         chatHistory.setUserQuestion(userQuestion);
         chatHistory.setUserQuestionEmbedding(userQuestionEmbedding);
         chatHistory.setLLMResponseEmbedding(llmResponseEmbedding);
