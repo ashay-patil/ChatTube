@@ -6,20 +6,11 @@ import com.chat.backend.entities.Video;
 import com.chat.backend.entities.VideoChunk;
 import com.chat.backend.repositories.VideoChunkRepository;
 import com.chat.backend.repositories.VideoRepository;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestTemplate;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,19 +30,10 @@ public class YoutubeLinksSave {
     @Autowired
     private EmbeddingService embeddingService;
 
-    public List<VideoChunk> saveYoutubeLinksToDB(List<String> youtubeLinks) throws Exception {
+    public String saveYoutubeLinksToDB(List<String> youtubeLinks)  {
         youtubeLinks.forEach((link)->{
             Video video = new Video(extractVideoId(link), link);
             Video savedVideo = repository.save(video);
-            RestTemplate restTemplate = new RestTemplate();
-
-//            SupadataResponse result = restTemplate.getForObject("https://api.supadata.ai/v1/transcript?url=" + encodedUri, SupadataResponse.class);
-//            System.out.println("Supadata result : " + result);
-//            List<Transcript> transcripts = result.getTranscript();
-
-//            if(API_KEY == null || API_KEY.length()==0) {
-//                throw new RuntimeException("API_KEY not found");
-//            }
             RestClient restClient = RestClient.create();
             SupadataResponse result =
                     restClient
@@ -62,6 +44,9 @@ public class YoutubeLinksSave {
                             .retrieve()
                             .body(SupadataResponse.class);
             System.out.println(result);
+            if(result == null) {
+                throw new RuntimeException("Supadata returned null");
+            }
             List<Transcript> transcripts = result.getContent();
 
             int i = 0;
@@ -108,10 +93,8 @@ public class YoutubeLinksSave {
                 i = j;
             }
 
-            System.out.println("Saved chunks + embeddings to DB");
         });
-        System.out.println("Saved to DB");
-        return videoChunkRepository.findAll();
+        return "Embeddings Generated and Saved to DB";
     }
 
     public String extractVideoId(String youtubeUrl) {
@@ -121,10 +104,10 @@ public class YoutubeLinksSave {
         Pattern compiledPattern = Pattern.compile(pattern);
         Matcher matcher = compiledPattern.matcher(youtubeUrl);
 
-        if (matcher.find()) {
-            return matcher.group(1);
+        if (!matcher.find()) {
+            throw new RuntimeException("Invalid Youtube Video Id");
         }
 
-        return "Could not extract video ID";
+        return matcher.group(1);
     }
 }
