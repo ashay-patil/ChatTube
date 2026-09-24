@@ -1,8 +1,7 @@
-package com.chat.backend.services;
+package com.chat.backend.RAG;
 
 
 import com.chat.backend.DTO.ChatHistorySearchResult;
-import com.chat.backend.DTO.VideoChunkSearchResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;

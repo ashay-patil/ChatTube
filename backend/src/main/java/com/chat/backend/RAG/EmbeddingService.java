@@ -1,4 +1,4 @@
-package com.chat.backend.services;
+package com.chat.backend.RAG;
 
 import com.google.genai.Client;
 import com.google.genai.types.ContentEmbedding;

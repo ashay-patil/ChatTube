@@ -2,6 +2,7 @@ package com.chat.backend.services;
 
 import com.chat.backend.DTO.SupadataResponse;
 import com.chat.backend.DTO.Transcript;
+import com.chat.backend.RAG.EmbeddingService;
 import com.chat.backend.entities.Video;
 import com.chat.backend.entities.VideoChunk;
 import com.chat.backend.repositories.VideoChunkRepository;

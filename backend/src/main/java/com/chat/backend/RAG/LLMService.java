@@ -1,4 +1,4 @@
-package com.chat.backend.services;
+package com.chat.backend.RAG;
 import com.google.genai.Client;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;

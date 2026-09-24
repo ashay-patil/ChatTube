@@ -2,9 +2,9 @@ package com.chat.backend.controllers;
 
 import com.chat.backend.DTO.ChatHistorySearchResult;
 import com.chat.backend.repositories.VideoRepository;
-import com.chat.backend.services.ChatHistorySimilaritySearch;
-import com.chat.backend.services.EmbeddingService;
-import com.chat.backend.services.LLMService;
+import com.chat.backend.RAG.ChatHistorySimilaritySearch;
+import com.chat.backend.RAG.EmbeddingService;
+import com.chat.backend.RAG.LLMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
