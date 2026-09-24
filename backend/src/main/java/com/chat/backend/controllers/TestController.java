@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -42,14 +43,14 @@ public class TestController {
     }
 
     @GetMapping("/test-chat-history-retrieval")
-    public List<ChatHistorySearchResult> getRelevantChatHistory() {
+    public List<ChatHistorySearchResult> getRelevantChatHistory(@RequestParam("chatSessionId") String chatSessionId) {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
         User user =
                 (User) authentication.getPrincipal();
         List<Double> testEmbedding = embeddingService.generateEmbedding("What all questions about brain power did I ask you ? ");
-        return chatHistorySimilaritySearch.search(testEmbedding, user);
+        return chatHistorySimilaritySearch.search(testEmbedding, user, chatSessionId);
     }
 
     @GetMapping("/get-me")

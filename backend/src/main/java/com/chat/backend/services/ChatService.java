@@ -8,8 +8,10 @@ import com.chat.backend.RAG.EmbeddingService;
 import com.chat.backend.RAG.LLMService;
 import com.chat.backend.RAG.VideoChunkSimilaritySearch;
 import com.chat.backend.entities.ChatHistory;
+import com.chat.backend.entities.ChatSession;
 import com.chat.backend.entities.User;
 import com.chat.backend.repositories.ChatHistoryRepository;
+import com.chat.backend.repositories.ChatSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
@@ -37,10 +39,14 @@ public class ChatService {
     @Autowired
     ChatHistoryRepository chatHistoryRepository;
 
-    public LLMResponse getResponse(String userQuestion, User user) throws Exception{
+    @Autowired
+    ChatSessionRepository chatSessionRepository;
+
+    public LLMResponse getResponse(String userQuestion, String chatSessionId, User user) throws Exception{
+        ChatSession chatSession = chatSessionRepository.findById(chatSessionId).orElseThrow(()-> new RuntimeException("Invalid Chat Session"));
         List<Double> userQuestionEmbedding = embeddingService.generateEmbedding(userQuestion);
-        List<VideoChunkSearchResult> knowledgeBaseSimilarityResult = videoChunkSimilaritySearch.search(userQuestionEmbedding, user);
-        List<ChatHistorySearchResult> chatHistorySimilarityResult = chatHistorySimilaritySearch.search(userQuestionEmbedding, user);
+        List<VideoChunkSearchResult> knowledgeBaseSimilarityResult = videoChunkSimilaritySearch.search(userQuestionEmbedding, user, chatSessionId);
+        List<ChatHistorySearchResult> chatHistorySimilarityResult = chatHistorySimilaritySearch.search(userQuestionEmbedding, user, chatSessionId);
         System.out.println("videoChunkSimilarityResult="+knowledgeBaseSimilarityResult);
         System.out.println("chatHistorySimilarityResult="+chatHistorySimilarityResult);
 
@@ -65,6 +71,7 @@ public class ChatService {
         chatHistory.setUserQuestionEmbedding(userQuestionEmbedding);
         chatHistory.setLLMResponseEmbedding(llmResponseEmbedding);
         chatHistory.setUserId(user.getId());
+        chatHistory.setChatSessionId(chatSessionId);
 
         chatHistoryRepository.save(chatHistory);
 

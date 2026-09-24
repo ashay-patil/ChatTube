@@ -22,9 +22,13 @@ public class Video {
     @DocumentReference
     private User user;
 
-    public Video(String youtubeVideoId, String youtubeVideoUrl, User user) {
+    @DocumentReference
+    private ChatSession chatSession;
+
+    public Video(String youtubeVideoId, String youtubeVideoUrl, User user, ChatSession chatSession) {
         this.youtubeVideoId = youtubeVideoId;
         this.youtubeVideoUrl = youtubeVideoUrl;
         this.user = user;
+        this.chatSession = chatSession;
     }
 }

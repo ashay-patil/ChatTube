@@ -18,7 +18,7 @@ public class VideoChunkSimilaritySearch {
     @Autowired
     private EmbeddingService embeddingService;
 
-    public List<VideoChunkSearchResult> search(List<Double> queryEmbedding, User user) {
+    public List<VideoChunkSearchResult> search(List<Double> queryEmbedding, User user, String chatSessionId) {
 
         Document vectorSearch = new Document(
                 "$vectorSearch",
@@ -28,7 +28,10 @@ public class VideoChunkSimilaritySearch {
                         .append("numCandidates", 50)
                         .append("limit", 10)
                         .append("filter",
-                                new Document("userId", user.getId())
+                                new Document("$and", List.of(
+                                        new Document("userId", user.getId()),
+                                        new Document("chatSessionId", chatSessionId)
+                                ))
                         )
         );
 

@@ -20,7 +20,7 @@ public class ChatHistorySimilaritySearch {
     @Autowired
     private EmbeddingService embeddingService;
 
-    public List<ChatHistorySearchResult> search(List<Double> queryEmbedding, User user) {
+    public List<ChatHistorySearchResult> search(List<Double> queryEmbedding, User user, String chatSessionId) {
         System.out.println("Got the embeddings");
         Document vectorSearchLLMResponse = new Document(
                 "$vectorSearch",
@@ -30,7 +30,10 @@ public class ChatHistorySimilaritySearch {
                         .append("numCandidates", 50)
                         .append("limit", 10)
                         .append("filter",
-                                new Document("userId", user.getId())
+                                new Document("$and", List.of(
+                                        new Document("userId", user.getId()),
+                                        new Document("chatSessionId", chatSessionId)
+                                ))
                         )
         );
         Document vectorSearchUserQuestion = new Document(
@@ -41,7 +44,10 @@ public class ChatHistorySimilaritySearch {
                         .append("numCandidates", 50)
                         .append("limit", 10)
                         .append("filter",
-                                new Document("userId", user.getId())
+                                new Document("$and", List.of(
+                                        new Document("userId", user.getId()),
+                                        new Document("chatSessionId", chatSessionId)
+                                ))
                         )
         );
 

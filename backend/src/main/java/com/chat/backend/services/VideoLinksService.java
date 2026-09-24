@@ -2,12 +2,16 @@ package com.chat.backend.services;
 
 import com.chat.backend.DTO.SupadataResponse;
 import com.chat.backend.DTO.Transcript;
+import com.chat.backend.DTO.YoutubeLinksRequest;
 import com.chat.backend.RAG.EmbeddingService;
+import com.chat.backend.entities.ChatSession;
 import com.chat.backend.entities.User;
 import com.chat.backend.entities.Video;
 import com.chat.backend.entities.VideoChunk;
+import com.chat.backend.repositories.ChatSessionRepository;
 import com.chat.backend.repositories.VideoChunkRepository;
 import com.chat.backend.repositories.VideoRepository;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,9 +36,13 @@ public class VideoLinksService {
     @Autowired
     private EmbeddingService embeddingService;
 
-    public String saveYoutubeLinksToDB(List<String> youtubeLinks, User user)  {
+    @Autowired
+    private ChatSessionRepository chatSessionRepository;
+
+    public String saveYoutubeLinksToDB(List<String> youtubeLinks, String chatSessionId, User user)  {
+        ChatSession chatSession = chatSessionRepository.findById(chatSessionId).orElseThrow(() -> new RuntimeException("Invalid Chat Session"));
         youtubeLinks.forEach((link)->{
-            Video video = new Video(extractVideoId(link), link, user);
+            Video video = new Video(extractVideoId(link), link, user, chatSession);
             Video savedVideo = repository.save(video);
             RestClient restClient = RestClient.create();
             SupadataResponse result =
@@ -87,7 +95,8 @@ public class VideoLinksService {
                         endTime,
                         chunkText,
                         embedding,
-                        user.getId()
+                        user.getId(),
+                        chatSessionId
                 );
 
                 videoChunkRepository.save(videoChunk);

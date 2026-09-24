@@ -10,7 +10,6 @@ import java.util.List;
 @Data
 @Document("ChatHistory")
 public class ChatHistory {
-    // id , userQuestion, userQuestionEmbedding, LLMResponse, LLMResponseEmbedding
     @Id
     private String id;
     private String userQuestion;
@@ -18,6 +17,5 @@ public class ChatHistory {
     private String LLMResponse;
     private List<Double> LLMResponseEmbedding;
     private String userId;
-
-    // later need to add session and user fields
+    private String chatSessionId;
 }

@@ -28,9 +28,10 @@ public class VideoChunk {
     private List<Double> embedding;
 
     private String userId;
+    private String chatSessionId;
 
 
-    public VideoChunk(Video savedVideo, int chunkIndex, int startTime, int endTime, String chunkText, List<Double> embedding, String userId) {
+    public VideoChunk(Video savedVideo, int chunkIndex, int startTime, int endTime, String chunkText, List<Double> embedding, String userId, String chatSessionId) {
         video = savedVideo;
         this.chunkIndex = chunkIndex;
         this.startTime = startTime;
@@ -38,5 +39,6 @@ public class VideoChunk {
         text = chunkText;
         this.embedding = embedding;
         this.userId = userId;
+        this.chatSessionId = chatSessionId;
     }
 }
