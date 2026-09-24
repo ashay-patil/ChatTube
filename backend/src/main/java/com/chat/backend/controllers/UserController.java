@@ -6,6 +6,7 @@ import com.chat.backend.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -27,17 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/get-profile")
-    public User getProfile() {
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
-
-        User user =
-                (User) authentication.getPrincipal();
-
-        System.out.println(user.getId());
-        System.out.println(user.getUsername());
-        System.out.println(user.getRole());
-
+    public User getProfile(@AuthenticationPrincipal User user) {
         return user;
     }
 }
