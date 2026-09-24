@@ -1,11 +1,14 @@
 package com.chat.backend.controllers;
 
 import com.chat.backend.DTO.ChatHistorySearchResult;
+import com.chat.backend.entities.User;
 import com.chat.backend.repositories.VideoRepository;
 import com.chat.backend.RAG.ChatHistorySimilaritySearch;
 import com.chat.backend.RAG.EmbeddingService;
 import com.chat.backend.RAG.LLMService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,8 +42,13 @@ public class TestController {
 
     @GetMapping("/test-chat-history-retrieval")
     public List<ChatHistorySearchResult> getRelevantChatHistory() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        User user =
+                (User) authentication.getPrincipal();
         List<Double> testEmbedding = embeddingService.generateEmbedding("What all questions about brain power did I ask you ? ");
-        return chatHistorySimilaritySearch.search(testEmbedding);
+        return chatHistorySimilaritySearch.search(testEmbedding, user);
     }
 
 }

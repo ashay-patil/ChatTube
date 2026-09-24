@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 @Data
 @NoArgsConstructor
@@ -18,8 +19,12 @@ public class Video {
 
     private String youtubeVideoUrl;
 
-    public Video(String youtubeVideoId, String youtubeVideoUrl) {
+    @DocumentReference
+    private User user;
+
+    public Video(String youtubeVideoId, String youtubeVideoUrl, User user) {
         this.youtubeVideoId = youtubeVideoId;
         this.youtubeVideoUrl = youtubeVideoUrl;
+        this.user = user;
     }
 }

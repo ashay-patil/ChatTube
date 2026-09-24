@@ -3,6 +3,7 @@ package com.chat.backend.services;
 import com.chat.backend.DTO.SupadataResponse;
 import com.chat.backend.DTO.Transcript;
 import com.chat.backend.RAG.EmbeddingService;
+import com.chat.backend.entities.User;
 import com.chat.backend.entities.Video;
 import com.chat.backend.entities.VideoChunk;
 import com.chat.backend.repositories.VideoChunkRepository;
@@ -31,9 +32,9 @@ public class YoutubeLinksSave {
     @Autowired
     private EmbeddingService embeddingService;
 
-    public String saveYoutubeLinksToDB(List<String> youtubeLinks)  {
+    public String saveYoutubeLinksToDB(List<String> youtubeLinks, User user)  {
         youtubeLinks.forEach((link)->{
-            Video video = new Video(extractVideoId(link), link);
+            Video video = new Video(extractVideoId(link), link, user);
             Video savedVideo = repository.save(video);
             RestClient restClient = RestClient.create();
             SupadataResponse result =
@@ -85,7 +86,8 @@ public class YoutubeLinksSave {
                         startTime,
                         endTime,
                         chunkText,
-                        embedding
+                        embedding,
+                        user.getId()
                 );
 
                 videoChunkRepository.save(videoChunk);

@@ -17,6 +17,7 @@ public class ChatHistory {
     private List<Double> userQuestionEmbedding;
     private String LLMResponse;
     private List<Double> LLMResponseEmbedding;
+    private String userId;
 
     // later need to add session and user fields
 }

@@ -8,6 +8,7 @@ import com.chat.backend.RAG.EmbeddingService;
 import com.chat.backend.RAG.LLMService;
 import com.chat.backend.RAG.VideoChunkSimilaritySearch;
 import com.chat.backend.entities.ChatHistory;
+import com.chat.backend.entities.User;
 import com.chat.backend.repositories.ChatHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,11 +37,11 @@ public class ChatService {
     @Autowired
     ChatHistoryRepository chatHistoryRepository;
 
-    public LLMResponse getResponse(String userQuestion) throws Exception{
+    public LLMResponse getResponse(String userQuestion, User user) throws Exception{
         List<Double> userQuestionEmbedding = embeddingService.generateEmbedding(userQuestion);
-        List<VideoChunkSearchResult> knowledgeBaseSimilarityResult = videoChunkSimilaritySearch.search(userQuestionEmbedding);
-        List<ChatHistorySearchResult> chatHistorySimilarityResult = chatHistorySimilaritySearch.search(userQuestionEmbedding);
-        System.out.println("videoChunkSimilarityResult="+videoChunkSimilaritySearch);
+        List<VideoChunkSearchResult> knowledgeBaseSimilarityResult = videoChunkSimilaritySearch.search(userQuestionEmbedding, user);
+        List<ChatHistorySearchResult> chatHistorySimilarityResult = chatHistorySimilaritySearch.search(userQuestionEmbedding, user);
+        System.out.println("videoChunkSimilarityResult="+knowledgeBaseSimilarityResult);
         System.out.println("chatHistorySimilarityResult="+chatHistorySimilarityResult);
 
         StringBuilder videoTranscriptPromptContext = new StringBuilder("");
@@ -63,6 +64,7 @@ public class ChatService {
         chatHistory.setUserQuestion(userQuestion);
         chatHistory.setUserQuestionEmbedding(userQuestionEmbedding);
         chatHistory.setLLMResponseEmbedding(llmResponseEmbedding);
+        chatHistory.setUserId(user.getId());
 
         chatHistoryRepository.save(chatHistory);
 

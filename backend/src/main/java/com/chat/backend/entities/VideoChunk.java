@@ -27,12 +27,16 @@ public class VideoChunk {
     private String text;
     private List<Double> embedding;
 
-    public VideoChunk(Video savedVideo, int chunkIndex, int startTime, int endTime, String chunkText, List<Double> embedding) {
+    private String userId;
+
+
+    public VideoChunk(Video savedVideo, int chunkIndex, int startTime, int endTime, String chunkText, List<Double> embedding, String userId) {
         video = savedVideo;
         this.chunkIndex = chunkIndex;
         this.startTime = startTime;
         this.endTime = endTime;
         text = chunkText;
         this.embedding = embedding;
+        this.userId = userId;
     }
 }

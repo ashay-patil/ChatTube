@@ -1,6 +1,8 @@
 package com.chat.backend.RAG;
 
 import com.chat.backend.DTO.VideoChunkSearchResult;
+import com.chat.backend.entities.User;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,7 @@ public class VideoChunkSimilaritySearch {
     @Autowired
     private EmbeddingService embeddingService;
 
-    public List<VideoChunkSearchResult> search(List<Double> queryEmbedding) {
+    public List<VideoChunkSearchResult> search(List<Double> queryEmbedding, User user) {
 
         Document vectorSearch = new Document(
                 "$vectorSearch",
@@ -25,6 +27,9 @@ public class VideoChunkSimilaritySearch {
                         .append("queryVector", queryEmbedding)
                         .append("numCandidates", 50)
                         .append("limit", 10)
+                        .append("filter",
+                                new Document("userId", user.getId())
+                        )
         );
 
         Document project = new Document(
