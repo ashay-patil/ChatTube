@@ -8,6 +8,7 @@ import com.chat.backend.RAG.EmbeddingService;
 import com.chat.backend.RAG.LLMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,11 @@ public class TestController {
                 (User) authentication.getPrincipal();
         List<Double> testEmbedding = embeddingService.generateEmbedding("What all questions about brain power did I ask you ? ");
         return chatHistorySimilaritySearch.search(testEmbedding, user);
+    }
+
+    @GetMapping("/get-me")
+    public User getMe(@AuthenticationPrincipal User user) {
+        return user;
     }
 
 }

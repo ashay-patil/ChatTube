@@ -18,7 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class YoutubeLinksSave {
+public class VideoLinksService {
 
     @Value("${SUPADATA_API_KEY}")
     private String API_KEY;
