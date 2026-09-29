@@ -18,4 +18,8 @@ public class VideoLinksController {
     public String uploadYoutubeVideos(@RequestBody YoutubeLinksRequest youtubeLinksRequest, @RequestParam("chatSessionId") String chatSessionId, @AuthenticationPrincipal User user) throws  Exception{
         return videoLinksService.saveYoutubeLinksToDB(youtubeLinksRequest.getYoutubeLinks(), chatSessionId, user);
     }
+
+    // Get All videos for the user with chatSessionId (RequestParam).
+
+    // Get a video with Id for the user and chatSessionId (RequestParam)
 }

@@ -17,4 +17,6 @@ public class ChatController {
     public LLMResponse getResponse(@RequestBody String userQuestion, @RequestParam("chatSessionId") String chatSessionId, @AuthenticationPrincipal User user) throws Exception{
         return chatService.getResponse(userQuestion, chatSessionId, user);
     }
+
+    // Get all chats for the user with the chatSessionId(RequestParam) -> Return only userQuestion and LLMResponse
 }

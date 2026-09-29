@@ -22,4 +22,6 @@ public class ChatSessionController {
     public ChatSession createChatSession(@RequestBody ChatSession chatSession, @AuthenticationPrincipal User user) {
         return chatSessionService.save(chatSession, user);
     }
+
+    // Get All ChatSessions for the user
 }
