@@ -1,6 +1,7 @@
 package com.chat.backend.services;
 
 import com.chat.backend.DTO.ChatHistorySearchResult;
+import com.chat.backend.DTO.ChatResponse;
 import com.chat.backend.DTO.LLMResponse;
 import com.chat.backend.DTO.VideoChunkSearchResult;
 import com.chat.backend.RAG.ChatHistorySimilaritySearch;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -78,6 +80,17 @@ public class ChatService {
         System.out.println(llmResponseObject);
 
         return llmResponseObject;
+    }
+
+    public List<ChatResponse> getAllChats(String chatSessionId, User user) {
+
+        List<ChatHistory> chatHistories = chatHistoryRepository.findByChatSessionIdAndUserId(chatSessionId, user.getId());
+        List<ChatResponse> chatResponses = new ArrayList<>();
+        chatHistories.forEach((chatHistory)->{
+            ChatResponse chatResponse = new ChatResponse(chatHistory.getId(), chatHistory.getUserQuestion(), chatHistory.getLLMResponse());
+            chatResponses.add(chatResponse);
+        });
+        return chatResponses;
     }
 
 }

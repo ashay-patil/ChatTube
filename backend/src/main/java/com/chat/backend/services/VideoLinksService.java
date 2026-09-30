@@ -2,6 +2,7 @@ package com.chat.backend.services;
 
 import com.chat.backend.DTO.SupadataResponse;
 import com.chat.backend.DTO.Transcript;
+import com.chat.backend.DTO.VideoResponse;
 import com.chat.backend.DTO.YoutubeLinksRequest;
 import com.chat.backend.RAG.EmbeddingService;
 import com.chat.backend.entities.ChatSession;
@@ -14,9 +15,11 @@ import com.chat.backend.repositories.VideoRepository;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,6 +35,9 @@ public class VideoLinksService {
 
     @Autowired
     private VideoChunkRepository videoChunkRepository;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Autowired
     private EmbeddingService embeddingService;
@@ -121,5 +127,24 @@ public class VideoLinksService {
         }
 
         return matcher.group(1);
+    }
+
+    public List<VideoResponse> getAllVideos(String chatSessionId, User user) {
+        ChatSession chatSession = chatSessionRepository
+                .findById(chatSessionId)
+                .orElseThrow(() -> new RuntimeException("Chat session not found"));
+
+        if (!chatSession.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized access to chat session");
+        }
+        List<Video> videos = repository.findByChatSessionAndUser(chatSession, user);
+
+        List<VideoResponse> videosResponse = new ArrayList<>();
+        videos.forEach((video) -> {
+            VideoResponse videoResponse = new VideoResponse(video.getId(), video.getYoutubeVideoId(), video.getYoutubeVideoUrl());
+            videosResponse.add(videoResponse);
+        });
+
+        return videosResponse;
     }
 }
