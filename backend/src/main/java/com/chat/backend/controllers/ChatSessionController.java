@@ -19,7 +19,7 @@ public class ChatSessionController {
     private ChatSessionService chatSessionService;
 
     @PostMapping("/create-chat-session")
-    public ChatSession createChatSession(@RequestBody ChatSession chatSession, @AuthenticationPrincipal User user) {
+    public ChatSessionResponse createChatSession(@RequestBody ChatSession chatSession, @AuthenticationPrincipal User user) {
         return chatSessionService.save(chatSession, user);
     }
 

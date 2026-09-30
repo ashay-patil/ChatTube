@@ -15,9 +15,11 @@ public class ChatSessionService {
     @Autowired
     private ChatSessionRepository chatSessionRepository;
 
-    public ChatSession save(ChatSession chatSession, User user) {
+    public ChatSessionResponse save(ChatSession chatSession, User user) {
         chatSession.setUser(user);
-        return chatSessionRepository.save(chatSession);
+        ChatSession newChatSession = chatSessionRepository.save(chatSession);
+        ChatSessionResponse chatSessionResponse = new ChatSessionResponse(newChatSession.getId(), newChatSession.getSessionName());
+        return chatSessionResponse;
     }
 
     public List<ChatSessionResponse> getAllChatSessions(User user) {
