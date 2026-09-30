@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -49,8 +50,8 @@ public class ChatService {
         List<Double> userQuestionEmbedding = embeddingService.generateEmbedding(userQuestion);
         List<VideoChunkSearchResult> knowledgeBaseSimilarityResult = videoChunkSimilaritySearch.search(userQuestionEmbedding, user, chatSessionId);
         List<ChatHistorySearchResult> chatHistorySimilarityResult = chatHistorySimilaritySearch.search(userQuestionEmbedding, user, chatSessionId);
-        System.out.println("videoChunkSimilarityResult="+knowledgeBaseSimilarityResult);
-        System.out.println("chatHistorySimilarityResult="+chatHistorySimilarityResult);
+//        System.out.println("videoChunkSimilarityResult="+knowledgeBaseSimilarityResult);
+//        System.out.println("chatHistorySimilarityResult="+chatHistorySimilarityResult);
 
         StringBuilder videoTranscriptPromptContext = new StringBuilder("");
 
@@ -74,6 +75,7 @@ public class ChatService {
         chatHistory.setLLMResponseEmbedding(llmResponseEmbedding);
         chatHistory.setUserId(user.getId());
         chatHistory.setChatSessionId(chatSessionId);
+        chatHistory.setCreatedAt(new Date());
 
         chatHistoryRepository.save(chatHistory);
 
@@ -84,7 +86,7 @@ public class ChatService {
 
     public List<ChatResponse> getAllChats(String chatSessionId, User user) {
 
-        List<ChatHistory> chatHistories = chatHistoryRepository.findByChatSessionIdAndUserId(chatSessionId, user.getId());
+        List<ChatHistory> chatHistories = chatHistoryRepository.findByChatSessionIdAndUserIdOrderByCreatedAtAsc(chatSessionId, user.getId());
         List<ChatResponse> chatResponses = new ArrayList<>();
         chatHistories.forEach((chatHistory)->{
             ChatResponse chatResponse = new ChatResponse(chatHistory.getId(), chatHistory.getUserQuestion(), chatHistory.getLLMResponse());
