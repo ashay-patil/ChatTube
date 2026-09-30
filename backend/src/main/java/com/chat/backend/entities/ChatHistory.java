@@ -1,6 +1,7 @@
 package com.chat.backend.entities;
 
 
+import com.chat.backend.DTO.TimeStamp;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -20,4 +21,5 @@ public class ChatHistory {
     private String userId;
     private String chatSessionId;
     private Date createdAt;
+    private List<TimeStamp> timestamps;
 }

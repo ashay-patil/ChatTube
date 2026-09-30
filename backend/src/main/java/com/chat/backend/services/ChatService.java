@@ -76,6 +76,7 @@ public class ChatService {
         chatHistory.setUserId(user.getId());
         chatHistory.setChatSessionId(chatSessionId);
         chatHistory.setCreatedAt(new Date());
+        chatHistory.setTimestamps(llmResponseObject.getTimestamps());
 
         chatHistoryRepository.save(chatHistory);
 
@@ -89,7 +90,7 @@ public class ChatService {
         List<ChatHistory> chatHistories = chatHistoryRepository.findByChatSessionIdAndUserIdOrderByCreatedAtAsc(chatSessionId, user.getId());
         List<ChatResponse> chatResponses = new ArrayList<>();
         chatHistories.forEach((chatHistory)->{
-            ChatResponse chatResponse = new ChatResponse(chatHistory.getId(), chatHistory.getUserQuestion(), chatHistory.getLLMResponse());
+            ChatResponse chatResponse = new ChatResponse(chatHistory.getId(), chatHistory.getUserQuestion(), chatHistory.getLLMResponse(), chatHistory.getTimestamps());
             chatResponses.add(chatResponse);
         });
         return chatResponses;
