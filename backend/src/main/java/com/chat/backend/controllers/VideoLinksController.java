@@ -29,4 +29,12 @@ public class VideoLinksController {
     public List<VideoResponse> getAllVideos(@RequestParam("chatSessionId") String chatSessionId, @AuthenticationPrincipal User user) {
         return videoLinksService.getAllVideos(chatSessionId, user);
     }
+
+    @GetMapping("/get-video")
+    public VideoResponse getVideo(@RequestParam("videoId") String videoId, @AuthenticationPrincipal User user) {
+
+//        System.out.println(videoId);
+//        System.out.println(user);
+        return videoLinksService.getVideo(videoId, user);
+    }
 }

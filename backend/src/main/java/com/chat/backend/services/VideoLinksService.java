@@ -147,4 +147,16 @@ public class VideoLinksService {
 
         return videosResponse;
     }
+
+    public VideoResponse getVideo(String videoId, User user) {
+        Video video = repository.findById(videoId).orElseThrow(()-> new RuntimeException("Video Not Found"));
+
+        if(!video.getUser().getId().equals(user.getId())) {
+            throw  new RuntimeException("Unauthorized access.");
+        }
+
+        VideoResponse videoResponse = new VideoResponse(video.getId(), video.getYoutubeVideoId(), video.getYoutubeVideoUrl());
+
+        return videoResponse;
+    }
 }

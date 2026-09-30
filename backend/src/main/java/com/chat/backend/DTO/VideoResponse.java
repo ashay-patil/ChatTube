@@ -4,14 +4,14 @@ import lombok.Data;
 
 @Data
 public class VideoResponse {
-    private String Id;
+    private String id;
 
     private String youtubeVideoId;
 
     private String youtubeVideoUrl;
 
     public VideoResponse(String id, String youtubeVideoId, String youtubeVideoUrl) {
-        this.Id = id;
+        this.id = id;
         this.youtubeVideoId = youtubeVideoId;
         this.youtubeVideoUrl = youtubeVideoUrl;
     }

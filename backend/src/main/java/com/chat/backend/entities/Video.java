@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 @Document("Video")
 public class Video {
     @Id
-    private String Id;
+    private String id;
 
     private String youtubeVideoId;
 
