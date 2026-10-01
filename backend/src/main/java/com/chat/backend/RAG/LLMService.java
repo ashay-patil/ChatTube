@@ -20,16 +20,6 @@ public class LLMService {
     }
 
     public String getGeminiResponse(String userQuestion, String videoTranscriptContext, String chatHistoryContext) throws Exception{
-//        return "{\n" +
-//                "  \"response\": \"Yes, the video transcript mentions that your brain is the most powerful weapon in the world.\",\n" +
-//                "  \"timestamps\": [\n" +
-//                "    {\n" +
-//                "      \"videoId\": \"6ab0f20c5d1bb068c2df6446\",\n" +
-//                "      \"startTime\": 670,\n" +
-//                "      \"endTime\": 135190\n" +
-//                "    }\n" +
-//                "  ]\n" +
-//                "}";
         String promptString = this.loadPromptFromFile("prompt.txt");
         String promptContent = this.putValuesToTemplate(promptString, Map.of(
                 "question", userQuestion,
