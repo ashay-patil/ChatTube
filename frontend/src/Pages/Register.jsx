@@ -26,7 +26,6 @@ const Register = () => {
                     }),
                 }
             );
-
             const data = await response.text();
 
             if (response.ok) {
@@ -80,7 +79,7 @@ const Register = () => {
                         {/* Username */}
                         <div>
                             <label className="mb-2 block text-sm font-medium text-gray-300">
-                                Username
+                                Username Or Email
                             </label>
 
                             <input
